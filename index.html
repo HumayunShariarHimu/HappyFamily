@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Family</title>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(120deg, #89f7fe, #66a6ff); color: #333; margin: 0; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+  .container { max-width: 500px; width: 100%; background: rgba(255, 255, 255, 0.95); border-radius: 16px; padding: 30px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+  h1 { text-align: center; color: #0a58ca; margin-bottom: 20px; }
+  select { width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; outline: none; transition: border-color 0.3s; }
+  select:focus { border-color: #0a58ca; }
+  .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; animation: fadeIn 0.5s ease-in-out; }
+  .card h2 { color: #0a58ca; font-size: 20px; margin-top: 0; }
+  .category { font-size: 14px; color: #555; margin-bottom: 10px; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 600px) {
+    .container { padding: 20px; }
+    h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Happy Family</h1>
+  <select id="issueSelect">
+    <option value="">ইস্যু সিলেক্ট করুন</option>
+  </select>
+  <div id="solution" class="card" style="display: none;">
+    <h2 id="issueTitle"></h2>
+    <div class="category" id="category"></div>
+    <p><strong>ডিপ এনালাইসিস:</strong></p>
+    <p id="analysis"></p>
+    <p><strong>সমাধান:</strong></p>
+    <p id="advice"></p>
+  </div>
+</div>
+<script>
+const data = [
+  { issue: "টাকার ব্যয় / সংসারের খরচ", category: "আর্থিক সমস্যা", analysis: "বাংলাদেশে অনেক দম্পতির মধ্যে টাকা-পয়সা ব্যবস্থাপনা নিয়ে ভুল বোঝাবুঝি হয়। বিশেষ করে মাসিক খরচ, সঞ্চয়, হঠাৎ খরচ ইত্যাদিতে দ্বন্দ্ব হয়। কখনো একপক্ষ অন্যপক্ষকে অপব্যয়ী মনে করে, ফলে দূরত্ব তৈরি হয়।", advice: "প্রতি মাসে দুজন মিলে বাজেট তৈরি করুন, বড় খরচ আগে আলোচনা করুন, এবং দুজনের জন্যও ব্যক্তিগত খরচের সীমা নির্ধারণ করুন। একে অপরকে দোষ না দিয়ে যৌথ সমাধান খুঁজুন।" },
+  { issue: "শ্বশুরবাড়ি বা নিজের পরিবারের প্রতি আচরণ", category: "পারিবারিক সম্পর্ক", analysis: "শ্বশুরবাড়ি ও নিজের পরিবারের প্রতি দৃষ্টিভঙ্গি, কথা বলা বা সময় দেওয়া নিয়ে সমস্যা দেখা দেয়। বিশেষ করে পক্ষপাত, অসম্মান বা বেশি হস্তক্ষেপ দ্বন্দ্ব বাড়ায়।", advice: "উভয়ের পরিবারের জন্য সীমা ও সম্মানের নীতি ঠিক করুন। নিজের পরিবারের সমস্যা নিজেরা সমাধান করুন এবং জীবনসঙ্গীকে চাপমুক্ত রাখুন।" },
+  { issue: "সময় দেওয়া / সময়ের অভাব", category: "সম্পর্কে সময়ের অভাব", analysis: "চাকরি, ব্যবসা বা ব্যক্তিগত ব্যস্ততার কারণে অনেকেই সঙ্গীকে সময় দিতে পারে না। ফলে মানসিক দূরত্ব ও ভুল বোঝাবুঝি জন্ম নেয়।", advice: "প্রতিদিন অন্তত ২০-৩০ মিনিট নির্দিষ্ট সময় রাখুন একসাথে গল্প করার জন্য। একসাথে খাবার খাওয়া বা হাঁটাহাঁটি সম্পর্ক মজবুত করে।" },
+  { issue: "সন্তান লালন-পালন ও শিক্ষা", category: "প্যারেন্টিং সমস্যা", analysis: "সন্তানকে কীভাবে বড় করবে, কোন স্কুলে দেবে, শাসন করবে না ভালোবাসবে – এসব বিষয়ে ভিন্নমত তৈরি হয়। কারো ইগো বা একক সিদ্ধান্ত সম্পর্ককে ক্ষতিগ্রস্ত করে।", advice: "শিশুর স্বার্থকে প্রাধান্য দিন, যুক্তি ও তথ্যের ভিত্তিতে সিদ্ধান্ত নিন। প্রয়োজনে একসাথে কাউন্সেলিং বা বিশেষজ্ঞের পরামর্শ নিন।" },
+  { issue: "সামাজিক রীতি-নীতি ও বন্ধুবান্ধব", category: "সামাজিক জীবন", analysis: "কে কোন বন্ধুর সাথে মিশবে বা কোথায় যাবে – এসব নিয়ে সন্দেহ, রাগ বা নিয়ন্ত্রণ করার প্রবণতা দূরত্ব তৈরি করে।", advice: "খোলাখুলি কথা বলুন, পারস্পরিক বিশ্বাস তৈরি করুন। ব্যক্তিগত স্পেসের সীমা একসাথে নির্ধারণ করুন।" },
+  { issue: "কাজের চাপ বা চাকরির বিষয়", category: "কর্মক্ষেত্রের চাপ", analysis: "অফিসের টেনশন বাসায় নিয়ে এলে রাগ, বিরক্তি বা নীরবতা তৈরি হয়। এতে সঙ্গীর মনে অবহেলার অনুভূতি জন্ম নেয়।", advice: "বাসায় ফেরার সময় ৫-১০ মিনিট নিজের মন শান্ত রাখার চেষ্টা করুন। সঙ্গীর সাথে কথা বলুন এবং একসাথে চাপ ভাগাভাগি করুন।" },
+  { issue: "পারস্পরিক সম্মান ও কথার ধরণ", category: "যোগাযোগ সমস্যা", analysis: "রাগের মাথায় কটু কথা বলা বা অপমান সম্পর্ক নষ্ট করে। দীর্ঘ মেয়াদে বিশ্বাস ও ভালোবাসা দুর্বল হয়।", advice: "রাগ কমার পর কথা বলুন, কথায় সম্মান বজায় রাখুন, প্রয়োজনে বিরতি নিন। একে অপরকে বোঝার চেষ্টা করুন।" }
+];
+const select = document.getElementById('issueSelect');
+const solutionDiv = document.getElementById('solution');
+const issueTitle = document.getElementById('issueTitle');
+const categoryDiv = document.getElementById('category');
+const analysis = document.getElementById('analysis');
+const advice = document.getElementById('advice');
+for (let item of data) {
+  let option = document.createElement('option');
+  option.value = item.issue;
+  option.textContent = item.issue;
+  select.appendChild(option);
+}
+select.addEventListener('change', function() {
+  const selected = data.find(d => d.issue === this.value);
+  if (selected) {
+    solutionDiv.style.display = 'block';
+    issueTitle.textContent = selected.issue;
+    categoryDiv.textContent = `সমস্যার ক্যাটাগরি: ${selected.category}`;
+    analysis.textContent = selected.analysis;
+    advice.textContent = selected.advice;
+  } else {
+    solutionDiv.style.display = 'none';
+  }
+});
+</script>
+</body>
+</html>
